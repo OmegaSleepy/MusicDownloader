@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+<div class="bg-white p-8 rounded-xl shadow-lg w-96">
+
+    <div>
+
+        <label for="url" class="block mb-2 font-semibold">
+            Video URL
+        </label>
+
+        <input
+                id="url"
+                type="text"
+                name="url"
+                placeholder="Enter url"
+                class="border p-2 rounded w-full mb-4"
+        />
+
+        <button id="download-button"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >Download
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+    const url = document.getElementById("url");
+    const downloadButton = document.getElementById("download-button");
+
+    downloadButton.addEventListener("click", () => {
+
+        if (url.value === "") {
+            return;
+        }
+
+        const value = url.value;
+
+        value.replace("music.", "");
+
+        const downloadMethod = {
+            method: "single-audio",
+            url: value
+        }
+
+        fetch(`/download/`, {
+            method: "POST",
+            body: JSON.stringify(downloadMethod)
+        })
+
+    })
+</script>
+
+</body>
+</html>

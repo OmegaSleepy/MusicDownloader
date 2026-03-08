@@ -11,11 +11,10 @@ public class Main {
             config.staticFiles.add("/public");
 
             config.routes
-                    .post("/download", ctx -> {
-                        System.out.println(ctx.path());
-                        String url = ctx.formParam("url");
-                        DownloadService.download(url);
-                    })
+                    .post("/download", ctx -> DownloadService.downloadHead(ctx.body()))
+
+
+
                     ;
         }).start(8080);
 

@@ -1,6 +1,7 @@
 package org.omega;
 
 import io.javalin.Javalin;
+import org.omega.controllers.DownloadController;
 import org.omega.service.DownloadService;
 
 public class Main {
@@ -11,7 +12,7 @@ public class Main {
             config.staticFiles.add("/public");
 
             config.routes
-                    .post("/download", ctx -> DownloadService.downloadHead(ctx.body()))
+                    .post("/download", ctx -> DownloadController.downloadHead(ctx.body()))
 
 
 

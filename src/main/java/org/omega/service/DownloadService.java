@@ -18,6 +18,8 @@ public class DownloadService {
         String method = json.get("method").getAsString();
         String url = json.get("url").getAsString();
 
+        url = UrlValidator.fixUrl(url);
+
         switch (method) {
             case "single-audio" -> download(url);
         }

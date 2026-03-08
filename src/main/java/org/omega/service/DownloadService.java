@@ -1,8 +1,7 @@
 package org.omega.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.omega.validation.UrlValidator;
+import org.omega.util.Command;
+import org.omega.util.Method;
 
 import java.util.List;
 
@@ -10,44 +9,48 @@ public class DownloadService {
 
     public static final String DOWNLOAD_FOLDER = "/home/martin/Music/downloaded";
 
-    public static void downloadHead(String body){
-        JsonObject json;
-        Gson gson = new Gson();
-        json = gson.fromJson(body, JsonObject.class);
 
-        String method = json.get("method").getAsString();
-        String url = json.get("url").getAsString();
-
-        url = UrlValidator.fixUrl(url);
-
+    public static void downloadMultiple (String url, Method method){
         switch (method) {
-            case "single-audio" -> download(url);
+            case AUDIO -> download(url, List.of(
+                    "--yes-playlist",
+                    "-f", "bestaudio",
+                    "--extract-audio",
+                    "--audio-format", "mp3",
+                    "--audio-quality","0",
+                    "--embed-metadata",
+                    "--embed-thumbnail",
+                    "--convert-thumbnails", "jpg",
+                    "--parse-metadata", "playlist_index:%(track_number)s",
+                    "--output", "%(album,playlist_title)s/%(track_number,playlist_index)02d - %(title)s"
+            ));
+        }
+    }
+
+    public static void downloadSingle (String url, Method method) {
+            
+        switch (method) {
+            case AUDIO -> download(url, List.of(
+                    "-x",
+                    "--audio-format", "mp3",
+                    "--audio-quality", "0",
+                    "-o", "%(title)s",
+                    "--embed-metadata", "--embed-thumbnail"
+            ));
+
+            case VIDEO -> download(url, List.of(
+                    "-t", "mp4",
+                    "-o", "\"%(title)s.%(ext)s\"",
+                    "--embed-metadata", "--embed-thumbnail"
+            ));
         }
 
     }
 
-
-    public static void download(String url) {
-
-        try {
-            UrlValidator.validate(url);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-
-        download(url, new String[]{});
-
-    }
-
-    private static void download(String url, String[] params) {
+    private static void download(String url, List<String> params) {
 
         var command = new Command(
-                List.of(
-                "yt-dlp",
-                "-x",
-                "--audio-format", "mp3",
-                "--audio-quality", "0",
-                url),
+                Command.construct(params, url),
                 DOWNLOAD_FOLDER
         );
 
@@ -57,7 +60,5 @@ public class DownloadService {
             throw new RuntimeException(e);
         }
 
-
     }
-
 }

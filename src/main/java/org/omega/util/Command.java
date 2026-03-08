@@ -1,8 +1,10 @@
-package org.omega.service;
+package org.omega.util;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Command {
@@ -22,6 +24,16 @@ public class Command {
 
     public int run() throws Exception {
         return run(args);
+    }
+
+    public static List<String> construct(List<String> args, String url) {
+        ArrayList<String> result = new ArrayList<>();
+        result.add("yt-dlp");
+        result.add("--js-runtimes");
+        result.add("node:/usr/bin/node");
+        result.addAll(args);
+        result.add(url);
+        return result;
     }
 
     public int run(List<String> command) throws Exception {

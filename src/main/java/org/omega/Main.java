@@ -1,16 +1,19 @@
-package org.example;
+package org.omega;
 
 import io.javalin.Javalin;
-import org.example.service.DownloadService;
+import org.omega.service.DownloadService;
 
 public class Main {
     public static void main (String[] args) {
 
         var app = Javalin.create(config -> {
+            config.concurrency.useVirtualThreads = true;
+            config.staticFiles.add("/public");
+
             config.routes
-                    .get("/", ctx -> {})
                     .post("/download", ctx -> {
-                        String url = ctx.pathParam("url");
+                        System.out.println(ctx.path());
+                        String url = ctx.formParam("url");
                         DownloadService.download(url);
                     })
                     ;

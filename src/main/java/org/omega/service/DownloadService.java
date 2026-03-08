@@ -1,6 +1,6 @@
-package org.example.service;
+package org.omega.service;
 
-import org.example.validation.UrlValidator;
+import org.omega.validation.UrlValidator;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.example.validation;
+package org.omega.validation;
 
 public class UrlValidator {
 

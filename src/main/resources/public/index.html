@@ -10,54 +10,83 @@
 
 <div class="bg-white p-8 rounded-xl shadow-lg w-96">
 
-    <div>
+    <label for="url" class="block mb-2 font-semibold">
+        Video URL
+    </label>
 
-        <label for="url" class="block mb-2 font-semibold">
-            Video URL
+    <input
+            id="url"
+            type="text"
+            name="url"
+            placeholder="Enter url"
+            class="border p-2 rounded w-full mb-6"
+    />
+
+    <!-- Video / Audio -->
+    <div class="mb-4">
+        <p class="font-semibold mb-2">Download type</p>
+
+        <label class="flex items-center mb-1">
+            <input type="radio" name="format" value="video" checked class="mr-2">
+            Video
         </label>
 
-        <input
-                id="url"
-                type="text"
-                name="url"
-                placeholder="Enter url"
-                class="border p-2 rounded w-full mb-4"
-        />
-
-        <button id="download-button"
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >Download
-        </button>
-
+        <label class="flex items-center">
+            <input type="radio" name="format" value="audio" class="mr-2">
+            Audio
+        </label>
     </div>
+
+    <div class="mb-6">
+        <p class="font-semibold mb-2">Scope</p>
+
+        <label class="flex items-center mb-1">
+            <input type="radio" name="scope" value="single" checked class="mr-2">
+            Single
+        </label>
+
+        <label class="flex items-center">
+            <input type="radio" name="scope" value="album" class="mr-2">
+            Album
+        </label>
+    </div>
+
+    <button id="download-button"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
+        Download
+    </button>
 
 </div>
 
 <script>
-    const url = document.getElementById("url");
+    const urlInput = document.getElementById("url");
     const downloadButton = document.getElementById("download-button");
 
     downloadButton.addEventListener("click", () => {
 
-        if (url.value === "") {
+        const url = urlInput.value.trim();
+
+        if (url === "") {
             return;
         }
 
-        const value = url.value;
-
-        value.replace("music.", "");
+        const format = document.querySelector('input[name="format"]:checked').value;
+        const scope = document.querySelector('input[name="scope"]:checked').value;
 
         const downloadMethod = {
-            method: "single-audio",
-            url: value
-        }
+            url: url.replace("music.", ""),
+            method: format,
+            scope: scope
+        };
 
-        fetch(`/download/`, {
+        fetch("/download", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(downloadMethod)
-        })
-
-    })
+        });
+    });
 </script>
 
 </body>
